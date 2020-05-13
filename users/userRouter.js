@@ -69,8 +69,20 @@ router.delete('/:id', validateUserId, (req, res) => {
     })
 });
 
-router.put('/:id', validateUserId, (req, res) => {
-  
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+  userData
+    .update(req.user.id, req.body)
+    .then(numberUpdated => {
+      userData
+        .getById(req.user.id)
+        .then(user => {
+          res.status(200).json(user)
+        })
+    })
+    .catch(error => {
+      console.log('DB error at put`/:id`:', error)
+      res.status(500).json({ error: 'couldnt update data in database'})
+    })
 });
 
 //custom middleware
