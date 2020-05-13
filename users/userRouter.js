@@ -58,7 +58,15 @@ router.get('/:id/posts', validateUserId, (req, res) => {
 });
 
 router.delete('/:id', validateUserId, (req, res) => {
-  
+  userData
+    .remove(req.user.id)
+    .then(numberDeleted => {
+      res.status(200).json(req.user)
+    })
+    .catch(error => {
+      console.log('DB error at delete`/:id`:', error)
+      res.status(500).json({ error: 'couldnt remove data from database'})
+    })
 });
 
 router.put('/:id', validateUserId, (req, res) => {
