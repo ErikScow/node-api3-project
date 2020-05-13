@@ -8,7 +8,7 @@ server.use(logger)
 server.use('/api/users', userRouter)
 
 function logger(req, res, next){
-    console.log(`${new Date()}: ${req.method} to ${req.url} from ${req.get('Origin')}`)
+    console.log(`${new Date()}: ${req.method} to ${req.url}`)
     next()
 }
 
