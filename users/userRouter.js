@@ -3,16 +3,37 @@ const userData = require('./userDb')
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  // do your magic!
+router.post('/', validateUser, (req, res) => {
+  userData.insert(req.body)
+    .then(user => {
+      res.status(201).json(user)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not post user to database'})
+    })
 });
 
-router.post('/:id/posts', (req, res) => {
-  // do your magic!
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+  userData.insert(req.body)
+    .then(post => {
+      res.status(201).json(post)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not post post to database'})
+    })
 });
 
 router.get('/', (req, res) => {
-  res.status(200).json({message: 'it works'})
+  userData.get()
+    .then(users => {
+      res.status(200).json(users)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could get users from database'})
+    })
 });
 
 router.get('/:id', (req, res) => {
