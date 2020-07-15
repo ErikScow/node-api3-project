@@ -93,7 +93,6 @@ function validateUserId(req, res, next) {
         next()
       } else {
         res.status(404).json({message: "user not found"})
-        next({error})
       }
     })
     .catch(err => {
