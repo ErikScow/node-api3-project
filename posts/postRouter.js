@@ -25,12 +25,26 @@ router.get('/:id', validatePostId, (req, res) => {
     })
 });
 
-router.delete('/:id', (req, res) => {
-  // do your magic!
+router.delete('/:id', validatePostId, (req, res) => {
+  postData.remove(req.params.id)
+    .then(numDeleted => {
+      res.status(200).json({message: "deleted"})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not delete post from database'})
+    })
 });
 
-router.put('/:id', (req, res) => {
-  // do your magic!
+router.put('/:id', validatePostId, validatePost, (req, res) => {
+  postData.update(req.params.id, req.body)
+    .then(numUpdated => {
+      res.status(200).json({message: 'updated'})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not update post within database'})
+    })
 });
 
 // custom middleware
@@ -50,6 +64,16 @@ function validatePostId(req, res, next) {
       console.log(err)
       res.status(500).json({message: 'could not check ds for valid id'})
     })
+}
+
+function validatePost(req, res, next) {
+  if (!req.body) {
+    res.status(400).json({message: 'missing post data'})
+  } else if (!req.body.text) {
+    res.status(400).json({message: 'missing required text field'})
+  } else {
+    next()
+  }
 }
 
 module.exports = router;
