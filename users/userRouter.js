@@ -1,5 +1,6 @@
 const express = require('express');
 const userData = require('./userDb')
+const postData = require('../posts/postDb')
 
 const router = express.Router();
 
@@ -15,7 +16,8 @@ router.post('/', validateUser, (req, res) => {
 });
 
 router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
-  userData.insert(req.body)
+  req.body.user_id = req.user.id
+  postData.insert(req.body)
     .then(post => {
       res.status(201).json(post)
     })
@@ -36,12 +38,26 @@ router.get('/', (req, res) => {
     })
 });
 
-router.get('/:id', (req, res) => {
-  // do your magic!
+router.get('/:id', validateUserId, (req, res) => {
+  userData.getById(req.params.id)
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not get user from database'})
+    })
 });
 
-router.get('/:id/posts', (req, res) => {
-  // do your magic!
+router.get('/:id/posts', validateUserId, (req, res) => {
+  userData.getUserPosts(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not get posts from database'})
+    })
 });
 
 router.delete('/:id', (req, res) => {
