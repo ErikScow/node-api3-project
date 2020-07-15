@@ -4,11 +4,25 @@ const postData = require('./postDb')
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.status(200).json({message: "router working"})
+  postData.get()
+    .then(posts => {
+      res.status(200).json(posts)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not get posts from database'})
+    })
 });
 
-router.get('/:id', (req, res) => {
-  // do your magic!
+router.get('/:id', validatePostId, (req, res) => {
+  postData.getById(req.params.id)
+    .then(post => {
+      res.status(200).json(post)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not get post from database'})
+    })
 });
 
 router.delete('/:id', (req, res) => {

@@ -56,7 +56,7 @@ router.get('/:id/posts', validateUserId, (req, res) => {
     })
     .catch(err => {
       console.log(err)
-      res.status(500).json({message: 'could not get posts from database'})
+      res.status(500).json({message: 'could not get users posts from database'})
     })
 });
 
