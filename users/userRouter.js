@@ -60,12 +60,26 @@ router.get('/:id/posts', validateUserId, (req, res) => {
     })
 });
 
-router.delete('/:id', (req, res) => {
-  // do your magic!
+router.delete('/:id', validateUserId, (req, res) => {
+  userData.remove(req.params.id)
+    .then(numDeleted => {
+      res.status(200).json({message: "deleted"})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not delete user from database'})
+    })
 });
 
-router.put('/:id', (req, res) => {
-  // do your magic!
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+  userData.update(req.params.id, req.body)
+    .then(numUpdated => {
+      res.status(200).json({message: "updated"})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({message: 'could not update user within database'})
+    })
 });
 
 //custom middleware
